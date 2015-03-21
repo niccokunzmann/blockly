@@ -397,7 +397,8 @@ Code.init = function() {
 
   Code.bindClick('trashButton',
       function() {Code.discard(); Code.renderContent();});
-  Code.bindClick('runButton', Code.runJS);
+  Code.bindClick('runButton', Code.runPython);
+  Code.bindClick('stepButton', Code.runJS);
 
   for (var i = 0; i < Code.TABS_.length; i++) {
     var name = Code.TABS_[i];
@@ -453,6 +454,7 @@ Code.initLanguage = function() {
 
   document.getElementById('linkButton').title = MSG['linkTooltip'];
   document.getElementById('runButton').title = MSG['runTooltip'];
+  document.getElementById('stepButton').title = MSG['stepTooltip'];
   document.getElementById('trashButton').title = MSG['trashTooltip'];
 
   var categories = ['catLogic', 'catLoops', 'catMath', 'catText', 'catLists',
@@ -469,6 +471,11 @@ Code.initLanguage = function() {
     listVar.textContent = MSG['listVariable'];
   }
 };
+
+
+Code.runPython = function() {
+  execute_python_code();
+}
 
 /**
  * Execute the user's code.

@@ -51,7 +51,7 @@ Blockly.Blocks['wait_for_milliseconds'] = {
 
  Blockly.JavaScript['servo_position'] = function(block) {
   var servo_angle = block.getFieldValue('angle');
-  var code = 'set_servo_position(' + servo_angle + ')';
+  var code = 'set_servo_position(' + servo_angle + ');\n';
   return code;
 };
 
@@ -67,13 +67,13 @@ Blockly.JavaScript['wait_for_milliseconds'] = function(block) {
 
  Blockly.Python['servo_position'] = function(block) {
   var servo_angle = block.getFieldValue('angle');
-  var code = 'set_servo_position(' + servo_angle + ')';
+  var code = 'set_servo_position(' + servo_angle + ')\n';
   return code;
 };
 
 Blockly.Python['wait_for_milliseconds'] = function(block) {
   var value_milliseconds = Blockly.Python.valueToCode(block, 'milliseconds', Blockly.Python.ORDER_ATOMIC);
-  var code = 'time.sleep(' + value_milliseconds + '/1000.)';
+  var code = 'time.sleep(' + value_milliseconds + '/1000.)\n';
   return code;
 };
 
@@ -81,24 +81,15 @@ Blockly.Python['wait_for_milliseconds'] = function(block) {
  *              move the robot
  */
 
-var servo_position_call = 0;
-
-var servo_call_element = null;
 
 function set_servo_position(degrees) {
   var position = Math.round(degrees);
-  var url = get_server_url() + '/servo_position/' + position;// + '?call=' + servo_position_call;
-  servo_position_call += 1;
-  if (servo_call_element == null) {
-    servo_call_element = document.createElement('iframe');
-    servo_call_element.setAttribute('id', 'servo_call_element');
-    document.body.appendChild(servo_call_element);
-  }
-  servo_call_element.src = url;
+  var path = '/servo_position/' + position;
+  call_server(path);
 }
 
 /********************************************************
- *              get the configuration
+ *              server
  */
 
 function getQueryParams(qs) {
@@ -121,3 +112,22 @@ function get_server_url() {
   return 'http://' + params.server
 }
 
+var server_call_element = null;
+
+function call_server(path) {
+  var url = get_server_url() + path;
+  if (server_call_element == null) {
+    server_call_element = document.createElement('iframe');
+    server_call_element.setAttribute('id', 'server_call_element');
+    document.body.appendChild(server_call_element);
+  }
+  server_call_element.src = url;
+}
+
+function execute_python_code() {
+  var python_code = Blockly.Python.workspaceToCode();
+  // http://stackoverflow.com/a/332897
+  var escaped_python_code = encodeURIComponent(python_code);
+  var path = '/execute_python?code=' + escaped_python_code;
+  call_server(path);
+}
