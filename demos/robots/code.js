@@ -289,6 +289,12 @@ Code.tabClick = function(clickedName) {
   Blockly.fireUiEvent(window, 'resize');
 };
 
+function get_xml_text() {
+  var xmlDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+  var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+  return xmlText
+}
+
 /**
  * Populate the currently selected pane with content generated from the blocks.
  */
@@ -297,9 +303,7 @@ Code.renderContent = function() {
   // Initialize the pane.
   if (content.id == 'content_xml') {
     var xmlTextarea = document.getElementById('content_xml');
-    var xmlDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
-    var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
-    xmlTextarea.value = xmlText;
+    xmlTextarea.value = get_xml_text();
     xmlTextarea.focus();
   } else if (content.id == 'content_javascript') {
     var code = Blockly.JavaScript.workspaceToCode();
@@ -392,8 +396,9 @@ Code.init = function() {
   Code.tabClick(Code.selected);
   Blockly.fireUiEvent(window, 'resize');
 
-  Code.bindClick('trashButton',
-      function() {Code.discard(); Code.renderContent();});
+  Code.bindClick('trashButton', function() {Code.discard(); Code.renderContent();});
+  Code.bindClick('saveCodeButton', save_code);
+  Code.bindClick('loadCodeButton', load_code);
   Code.bindClick('runButton', Code.runPython);
   Code.bindClick('startStepButton', parseCode);
   Code.bindClick('stepButton', stepCode);
@@ -406,6 +411,8 @@ Code.init = function() {
 
   // Lazy-load the syntax-highlighting.
   window.setTimeout(Code.importPrettify, 1);
+  
+  document.getElementById('upload_file_input').addEventListener('change', handleFileSelect, false);
 };
 
 /**
@@ -457,6 +464,8 @@ Code.initLanguage = function() {
   hide_step_button();
   document.getElementById('startStepButton').title = MSG['startStepTooltip'];
   document.getElementById('trashButton').title = MSG['trashTooltip'];
+  document.getElementById('loadCodeButton').title = MSG['loadTooltip'];
+  document.getElementById('saveCodeButton').title = MSG['saveTooltip'];
 
   var categories = ['catLogic', 'catLoops', 'catMath', 'catText', 'catLists',
                     'catColour', 'catVariables', 'catFunctions', 'catRobots'];
@@ -505,6 +514,50 @@ function hide_step_button() {
   document.getElementById('stepButton').style.visibility = "hidden";
 }
 
+function save_code() {
+  // http://stackoverflow.com/a/16451680/1320237
+  var blob = new Blob([get_xml_text()], {
+      type: "text/plain;charset=utf-8;",
+  });
+  var file_name = prompt(MSG['saveFileAs'], MSG['filename']);
+  saveAs(blob, "robot.xml");
+}
+
+function load_code() {
+  // how to load files
+  // http://www.html5rocks.com/en/tutorials/file/dndfiles/
+  document.getElementById('upload_file_input').click();
+  
+}
+
+function handleFileSelect(evt) {
+  // http://www.html5rocks.com/en/tutorials/file/dndfiles/
+  var files = evt.target.files; // FileList object
+
+  // Loop through the FileList and render image files as thumbnails.
+  for (var i = 0, f; f = files[i]; i++) {
+
+    // Only process image files.
+    if (!f.type.match('xml.*')) {
+      continue;
+    }
+
+    var reader = new FileReader();
+
+    // Closure to capture the file information.
+    reader.onload = (function(theFile) {
+      return function(e) {
+        var xml_content = e.target.result;
+        Code.loadBlocks(xml_content);
+      };
+    })(f);
+
+    // Read in the image file as a data URL.
+    reader.readAsText(f);
+  }
+}
+
+
 
 
 // Load the Code demo's language strings.
@@ -512,12 +565,4 @@ document.write('<script src="msg/' + Code.LANG + '.js"></script>\n');
 // Load Blockly's language strings.
 document.write('<script src="../../msg/js/' + Code.LANG + '.js"></script>\n');
 
-
-
-
-
-
 window.addEventListener('load', Code.init);
-
-
-

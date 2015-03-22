@@ -1,9 +1,7 @@
 var MSG = {
   title: "Code",
   blocks: "Blocks",
-  output: "Output",
-  runTooltip: "Run the program defined by the blocks in the workspace.",
-  stepTooltip: "Step through the program defined by the blocks in the workspace.",
+  runTooltip: "Run the program on the robot.",
   linkTooltip: "Save and link to blocks.",
   badCode: "Program error:\n%1",
   timeout: "Maximum execution iterations exceeded.",
@@ -17,12 +15,20 @@ var MSG = {
   catColour: "Colour",
   catVariables: "Variables",
   catFunctions: "Functions",
-  catRobots: "Robots",
   listVariable: "list",
   textVariable: "text",
   httpRequestError: "There was a problem with the request.",
   linkAlert: "Share your blocks with this link:\n\n%1",
   hashError: "Sorry, '%1' doesn't correspond with any saved program.",
   xmlError: "Could not load your saved file. Perhaps it was created with a different version of Blockly?",
-  badXml: "Error parsing XML:\n%1\n\nSelect 'OK' to abandon your changes or 'Cancel' to further edit the XML."
+  badXml: "Error parsing XML:\n%1\n\nSelect 'OK' to abandon your changes or 'Cancel' to further edit the XML.",
+
+  catRobots: "Robots",
+  output: "Output",
+  stepTooltip: "Execute one Instruction.",
+  startStepTooltip: "Step through the program defined by the blocks in the workspace.",
+  saveTooltip: "Save the Program to the computer.",
+  loadTooltip: "Load a Program from the computer.",
+  filename: "robot.xml",
+  saveFileAs: "What should the file be named?"
 };

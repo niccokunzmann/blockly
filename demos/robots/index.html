@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="style.css">
   <script src="acorn_interpreter.js"></script>
   <script src="interpreting.js"></script>
+  <script src="FileSaver.min.js"></script>
+  <script src="Blob.js"></script>
   <script src="/storage.js"></script>
   <script src="../../blockly_compressed.js"></script>
   <script src="../../blocks_compressed.js"></script>
@@ -44,6 +46,12 @@
             <td class="tabmin">&nbsp;</td>
             <td id="tab_output" class="taboff">...</td>
             <td class="tabmax">
+              <button id="saveCodeButton" class="notext" title="...">
+                <img src='../../media/1x1.gif' class="save icon21">
+              </button>
+              <button id="loadCodeButton" class="notext" title="...">
+                <img src='../../media/1x1.gif' class="load icon21">
+              </button>
               <button id="trashButton" class="notext" title="...">
                 <img src='../../media/1x1.gif' class="trash icon21">
               </button>
@@ -54,7 +62,7 @@
                 <img src='../../media/1x1.gif' class="run icon21">
               </button>
               <button id="stepButton" class="notext" title="...">
-                <img src='../../media/1x1.gif' class="run icon21">
+                <img src='../../media/1x1.gif' class="step icon21">
               </button>              
               <button id="runButton" class="notext primary" title="...">
                 <img src='../../media/1x1.gif' class="run icon21">
@@ -76,6 +84,7 @@
     
   </pre>
   <textarea id="content_xml" class="content" wrap="off"></textarea>
+  <input type="file" id="upload_file_input" />
 
   <xml id="toolbox" style="display: none">
     <category id="catLogic">
