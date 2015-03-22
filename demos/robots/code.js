@@ -105,7 +105,7 @@ Code.getLang = function() {
   var lang = Code.getStringParamFromUrl('lang', '');
   if (Code.LANGUAGE_NAME[lang] === undefined) {
     // Default to English.
-    lang = 'en';
+    lang = 'de';
   }
   return lang;
 };
@@ -242,7 +242,7 @@ Code.LANG = Code.getLang();
  * List of tab names.
  * @private
  */
-Code.TABS_ = ['blocks', 'javascript', 'python', 'dart', 'xml'];
+Code.TABS_ = ['blocks', 'javascript', 'python', 'xml', 'output'];
 
 Code.selected = 'blocks';
 
@@ -317,13 +317,10 @@ Code.renderContent = function() {
       code = prettyPrintOne(code, 'py');
       content.innerHTML = code;
     }
-  } else if (content.id == 'content_dart') {
-    code = Blockly.Dart.workspaceToCode();
-    content.textContent = code;
-    if (typeof prettyPrintOne == 'function') {
-      code = content.innerHTML;
-      code = prettyPrintOne(code, 'dart');
-      content.innerHTML = code;
+  } else if (content.id == 'content_output') {
+    // start monitoring output
+    if (current_language == EXECUTING_LANGUAGE_PYTHON) {
+      update_output();
     }
   }
 };
@@ -398,7 +395,8 @@ Code.init = function() {
   Code.bindClick('trashButton',
       function() {Code.discard(); Code.renderContent();});
   Code.bindClick('runButton', Code.runPython);
-  Code.bindClick('stepButton', Code.runJS);
+  Code.bindClick('startStepButton', parseCode);
+  Code.bindClick('stepButton', stepCode);
 
   for (var i = 0; i < Code.TABS_.length; i++) {
     var name = Code.TABS_[i];
@@ -451,10 +449,13 @@ Code.initLanguage = function() {
   document.title += ' ' + MSG['title'];
   document.getElementById('title').textContent = MSG['title'];
   document.getElementById('tab_blocks').textContent = MSG['blocks'];
+  document.getElementById('tab_output').textContent = MSG['output'];
 
   document.getElementById('linkButton').title = MSG['linkTooltip'];
   document.getElementById('runButton').title = MSG['runTooltip'];
   document.getElementById('stepButton').title = MSG['stepTooltip'];
+  hide_step_button();
+  document.getElementById('startStepButton').title = MSG['startStepTooltip'];
   document.getElementById('trashButton').title = MSG['trashTooltip'];
 
   var categories = ['catLogic', 'catLoops', 'catMath', 'catText', 'catLists',
@@ -472,31 +473,17 @@ Code.initLanguage = function() {
   }
 };
 
+var EXECUTING_LANGUAGE_PYTHON = 'Python';
+var EXECUTING_LANGUAGE_JAVASCRIPT = 'Javascript';
+
+var current_language = null;
 
 Code.runPython = function() {
+  current_language = EXECUTING_LANGUAGE_PYTHON;
+  hide_step_button();
+  document.getElementById("content_output").innerHTML = '<iframe id="content_output_frame" />';
   execute_python_code();
 }
-
-/**
- * Execute the user's code.
- * Just a quick and dirty eval.  Catch infinite loops.
- */
-Code.runJS = function() {
-  Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
-  var timeouts = 0;
-  var checkTimeout = function() {
-    if (timeouts++ > 1000000) {
-      throw MSG['timeout'];
-    }
-  };
-  var code = Blockly.JavaScript.workspaceToCode();
-  Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-  try {
-    eval(code);
-  } catch (e) {
-    alert(MSG['badCode'].replace('%1', e));
-  }
-};
 
 /**
  * Discard all blocks from the workspace.
@@ -510,10 +497,27 @@ Code.discard = function() {
   }
 };
 
+function show_step_button() {
+  document.getElementById('stepButton').style.visibility = "";
+}
+
+function hide_step_button() {
+  document.getElementById('stepButton').style.visibility = "hidden";
+}
+
+
+
 // Load the Code demo's language strings.
 document.write('<script src="msg/' + Code.LANG + '.js"></script>\n');
 // Load Blockly's language strings.
 document.write('<script src="../../msg/js/' + Code.LANG + '.js"></script>\n');
 
+
+
+
+
+
 window.addEventListener('load', Code.init);
+
+
 

@@ -5,12 +5,13 @@
   <meta name="google" value="notranslate">
   <title>Robots</title>
   <link rel="stylesheet" href="style.css">
+  <script src="acorn_interpreter.js"></script>
+  <script src="interpreting.js"></script>
   <script src="/storage.js"></script>
   <script src="../../blockly_compressed.js"></script>
   <script src="../../blocks_compressed.js"></script>
   <script src="../../javascript_compressed.js"></script>
   <script src="../../python_compressed.js"></script>
-  <script src="../../dart_compressed.js"></script>
   <!-- robots -->
   <script src="robots.js"></script>
   
@@ -39,9 +40,9 @@
             <td class="tabmin">&nbsp;</td>
             <td id="tab_python" class="taboff">Python</td>
             <td class="tabmin">&nbsp;</td>
-            <td id="tab_dart" class="taboff">Dart</td>
-            <td class="tabmin">&nbsp;</td>
             <td id="tab_xml" class="taboff">XML</td>
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_output" class="taboff">...</td>
             <td class="tabmax">
               <button id="trashButton" class="notext" title="...">
                 <img src='../../media/1x1.gif' class="trash icon21">
@@ -49,9 +50,12 @@
               <button id="linkButton" class="notext" title="...">
                 <img src='../../media/1x1.gif' class="link icon21">
               </button>
-              <button id="stepButton" class="notext" title="...">
+              <button id="startStepButton" class="notext" title="...">
                 <img src='../../media/1x1.gif' class="run icon21">
               </button>
+              <button id="stepButton" class="notext" title="...">
+                <img src='../../media/1x1.gif' class="run icon21">
+              </button>              
               <button id="runButton" class="notext primary" title="...">
                 <img src='../../media/1x1.gif' class="run icon21">
               </button>
@@ -68,7 +72,9 @@
   <div id="content_blocks" class="content"></div>
   <pre id="content_javascript" class="content"></pre>
   <pre id="content_python" class="content"></pre>
-  <pre id="content_dart" class="content"></pre>
+  <pre id="content_output" class="content">
+    
+  </pre>
   <textarea id="content_xml" class="content" wrap="off"></textarea>
 
   <xml id="toolbox" style="display: none">
@@ -284,11 +290,16 @@
     <category id="catFunctions" custom="PROCEDURE"></category>
     <category id="catRobots">
       <block type="servo_position"></block>
-      <block type="wait_for_milliseconds">
-        <value name="milliseconds">
+      <block type="servo_position_number">
+        <value name="angle">
           <block type="math_number">
-            <field name="NUM">300</field>
+            <field name="NUM">100</field>
           </block>
+        </value>
+      </block>
+      <block type="print">
+        <value name="output_value">
+          <block type="text"></block>
         </value>
       </block>
     </category>

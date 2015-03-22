@@ -16,8 +16,10 @@ Blockly.Blocks['servo_position'] = {
     this.setColour(0);
     this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("Servo")
+        .appendField("Drehe Servo auf")
         .appendField(new Blockly.FieldAngle("100"), "angle");
+    this.appendDummyInput()
+        .appendField("");
     this.setInputsInline(true);
     this.setPreviousStatement(true, "null");
     this.setNextStatement(true, "null");
@@ -25,17 +27,34 @@ Blockly.Blocks['servo_position'] = {
   }
 };
 
-Blockly.Blocks['wait_for_milliseconds'] = {
+Blockly.Blocks['servo_position_number'] = {
   init: function() {
     this.setHelpUrl('http://www.example.com/');
     this.setColour(0);
     this.appendDummyInput()
-        .appendField("Wait for");
-    this.appendValueInput("milliseconds")
+        .appendField("Drehe Servo auf");
+    this.appendValueInput("angle")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT);
     this.appendDummyInput()
-        .appendField("milliseconds");
+        .appendField("grad");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, "null");
+    this.setNextStatement(true, "null");
+    this.setTooltip('');
+  }
+};
+
+Blockly.Blocks['print'] = {
+  init: function() {
+    this.setHelpUrl('http://www.example.com/');
+    this.setColour(0);
+    this.appendValueInput("output_value")
+        .setCheck("null")
+        .setAlign(Blockly.ALIGN_CENTRE)
+        .appendField("Gebe");
+    this.appendDummyInput()
+        .appendField("aus");
     this.setInputsInline(true);
     this.setPreviousStatement(true, "null");
     this.setNextStatement(true, "null");
@@ -46,7 +65,7 @@ Blockly.Blocks['wait_for_milliseconds'] = {
 /********************************************************
  *              generate the code
  * 
- * Javascript
+ * JavaScript
  */
 
  Blockly.JavaScript['servo_position'] = function(block) {
@@ -55,11 +74,46 @@ Blockly.Blocks['wait_for_milliseconds'] = {
   return code;
 };
 
-Blockly.JavaScript['wait_for_milliseconds'] = function(block) {
-  var servo_angle = block.getFieldValue('angle');
-  var code = '';
+Blockly.JavaScript['servo_position_number'] = function(block) {
+  var servo_angle = Blockly.JavaScript.valueToCode(block, 'angle', Blockly.JavaScript.ORDER_ATOMIC);
+  var code = 'set_servo_position(' + servo_angle + ');\n';
   return code;
 };
+
+Blockly.JavaScript['print'] = function(block) {
+  var value_name = Blockly.JavaScript.valueToCode(block, 'output_value', Blockly.JavaScript.ORDER_ATOMIC);
+  var code = 'append_output(' + value_name + ');\n';
+  return code;
+};
+
+/**
+ * JavaScript Interpreter
+ */
+ 
+function initInterpreterApi(interpreter, scope) {
+  // Add an API function for the set_servo_position .
+  var wrapper = function(angle) {
+    return interpreter.createPrimitive(set_servo_position(angle));
+  };
+  interpreter.setProperty(scope, 'set_servo_position',
+      interpreter.createNativeFunction(wrapper));
+
+  // Add an API function for the append_output() block.
+  var wrapper = function(text) {
+    text = text ? text.toString() : '';
+    return interpreter.createPrimitive(append_output(text));
+  };
+  interpreter.setProperty(scope, 'append_output',
+      interpreter.createNativeFunction(wrapper));
+
+  // Add an API function for highlighting blocks.
+  var wrapper = function(id) {
+    id = id ? id.toString() : '';
+    return interpreter.createPrimitive(highlightBlock(id));
+  };
+  interpreter.setProperty(scope, 'highlightBlock',
+      interpreter.createNativeFunction(wrapper));
+}
 
 /**
  * Python
@@ -71,9 +125,15 @@ Blockly.JavaScript['wait_for_milliseconds'] = function(block) {
   return code;
 };
 
-Blockly.Python['wait_for_milliseconds'] = function(block) {
-  var value_milliseconds = Blockly.Python.valueToCode(block, 'milliseconds', Blockly.Python.ORDER_ATOMIC);
-  var code = 'time.sleep(' + value_milliseconds + '/1000.)\n';
+Blockly.Python['servo_position_number'] = function(block) {
+  var servo_angle = Blockly.Python.valueToCode(block, 'angle', Blockly.Python.ORDER_ATOMIC);
+  var code = 'set_servo_position(' + servo_angle + ')\n';
+  return code;
+};
+
+Blockly.Python['print'] = function(block) {
+  var value_name = Blockly.Python.valueToCode(block, 'output_value', Blockly.Python.ORDER_ATOMIC);
+  var code = 'print(' + value_name + ')\n';
   return code;
 };
 
@@ -130,4 +190,22 @@ function execute_python_code() {
   var escaped_python_code = encodeURIComponent(python_code);
   var path = '/execute_python?code=' + escaped_python_code;
   call_server(path);
+}
+
+var counter
+
+function update_output() {
+  if (current_language == EXECUTING_LANGUAGE_PYTHON) {
+    var output_frame = document.getElementById('content_output_frame');
+    output_frame.src = get_server_url() + '/output';
+  }
+}
+
+function append_output(output) {
+  var output_element = document.getElementById('content_output');
+  output_element.innerText += output + "\n";
+}
+
+function stop_execution() {
+  call_server("/stop_execution");
 }

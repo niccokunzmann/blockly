@@ -1,9 +1,10 @@
 var MSG = {
   title: "Code",
   blocks: "Bausteine",
+  output: "Ausgabe",
   linkTooltip: "Speichern und auf Bausteine verlinken.",
   runTooltip: "Das Programm ausführen, das von den Bausteinen im Arbeitsbereich definiert ist.",
-  runTooltip: "Das Programm Schritt für Schritt durchlaufen, das von den Bausteinen im Arbeitsbereich definiert ist.",
+  stepTooltip: "Das Programm Schritt für Schritt durchlaufen, das von den Bausteinen im Arbeitsbereich definiert ist.",
   badCode: "Programmfehler:\n%1",
   timeout: "Die maximalen Ausführungswiederholungen wurden überschritten.",
   discard: "Alle %1 Bausteine löschen?",

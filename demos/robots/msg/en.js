@@ -1,6 +1,7 @@
 var MSG = {
   title: "Code",
   blocks: "Blocks",
+  output: "Output",
   runTooltip: "Run the program defined by the blocks in the workspace.",
   stepTooltip: "Step through the program defined by the blocks in the workspace.",
   linkTooltip: "Save and link to blocks.",
