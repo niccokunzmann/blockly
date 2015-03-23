@@ -354,6 +354,7 @@ Code.init = function() {
     Code.bindClick(linkButton, BlocklyStorage.link);
   } else if (linkButton) {
     Code.bindClick(linkButton, save_as_link);
+    document.getElementById('linkButton').title = MSG['linkTooltipLink'];
   }
 
   var rtl = Code.isRtl();
