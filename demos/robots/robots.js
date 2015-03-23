@@ -166,8 +166,16 @@ function getQueryParams(qs) {
     return params;
 }
 
+function is_in_debug_mode() {
+  return getQueryParams(document.location.search).debug == 'true';
+}
+
 function get_server_url() {
   var params = getQueryParams(document.location.search);
+  if (params.server == null) {
+    // localhost
+    return ""
+  }
   return 'http://' + params.server
 }
 

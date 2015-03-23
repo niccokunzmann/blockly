@@ -243,6 +243,7 @@ Code.LANG = Code.getLang();
  * @private
  */
 Code.TABS_ = ['blocks', 'javascript', 'python', 'xml', 'output'];
+Code.DEBUG_TABS_ = ['javascript', 'python', 'xml'];
 
 Code.selected = 'blocks';
 
@@ -277,6 +278,14 @@ Code.tabClick = function(clickedName) {
     var name = Code.TABS_[i];
     document.getElementById('tab_' + name).className = 'taboff';
     document.getElementById('content_' + name).style.visibility = 'hidden';
+  }
+  
+  if (!is_in_debug_mode()) {
+    for(var i = 0; i < Code.DEBUG_TABS_.length; i++) {
+      name = Code.DEBUG_TABS_[i];
+      document.getElementById('tab_' + name).className = 'tabHidden';
+      document.getElementById('tab_' + name).innerText = "";
+    }
   }
 
   // Select the active tab.
@@ -344,7 +353,7 @@ Code.init = function() {
     BlocklyStorage['XML_ERROR'] = MSG['xmlError'];
     Code.bindClick(linkButton, BlocklyStorage.link);
   } else if (linkButton) {
-    linkButton.className = 'disabled';
+    Code.bindClick(linkButton, save_as_link);
   }
 
   var rtl = Code.isRtl();
@@ -398,7 +407,7 @@ Code.init = function() {
 
   Code.bindClick('trashButton', function() {Code.discard(); Code.renderContent();});
   Code.bindClick('saveCodeButton', save_code);
-  Code.bindClick('loadCodeButton', load_code);
+  Code.bindClick('loadCodeButton', load_code_from_file);
   Code.bindClick('runButton', Code.runPython);
   Code.bindClick('startStepButton', parseCode);
   Code.bindClick('stepButton', stepCode);
@@ -413,6 +422,7 @@ Code.init = function() {
   window.setTimeout(Code.importPrettify, 1);
   
   document.getElementById('upload_file_input').addEventListener('change', handleFileSelect, false);
+  load_from_parameters();
 };
 
 /**
@@ -523,7 +533,7 @@ function save_code() {
   saveAs(blob, "robot.xml");
 }
 
-function load_code() {
+function load_code_from_file() {
   // how to load files
   // http://www.html5rocks.com/en/tutorials/file/dndfiles/
   // could check for (window.File && window.FileReader && window.FileList)
@@ -558,6 +568,33 @@ function handleFileSelect(evt) {
   }
 }
 
+function serialize(obj) {
+  // http://stackoverflow.com/a/1714899
+  var str = [];
+  for(var p in obj)
+    if (obj.hasOwnProperty(p)) {
+      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+    }
+  return str.join("&");
+}
+
+function save_as_link() {
+  var parameters = getQueryParams(document.location.search);
+  var xmlDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+  var xmlText = Blockly.Xml.domToText(xmlDom);
+  parameters.loadCode = xmlText;
+  // open window 
+  //   http://stackoverflow.com/a/11384018
+  var url = document.location.origin + document.location.pathname + '?' + serialize(parameters);
+  var win = window.open(url, '_blank');
+}
+
+function load_from_parameters() {
+  var parameters = getQueryParams(document.location.search);
+  if (parameters.loadCode != null) {
+    Code.loadBlocks(parameters.loadCode)
+  }
+}
 
 
 

@@ -169,6 +169,11 @@ button {
   background-position: -105px 0px;
 }
 
+.tabHidden {
+  visibility: hidden;
+  border: 0;
+}
+
 #content_output_frame {
   width: 100%;
   height: 100%;
