@@ -526,8 +526,9 @@ function save_code() {
 function load_code() {
   // how to load files
   // http://www.html5rocks.com/en/tutorials/file/dndfiles/
+  // could check for (window.File && window.FileReader && window.FileList)
+  // but better try than exclude cases.
   document.getElementById('upload_file_input').click();
-  
 }
 
 function handleFileSelect(evt) {

@@ -16,10 +16,10 @@ Blockly.Blocks['servo_position'] = {
     this.setColour(0);
     this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("Drehe Servo auf")
+        .appendField(MSG['rotateServoToDegreesLeft'])
         .appendField(new Blockly.FieldAngle("100"), "angle");
     this.appendDummyInput()
-        .appendField("");
+        .appendField(MSG['rotateServoToDegreesRight']);
     this.setInputsInline(true);
     this.setPreviousStatement(true, "null");
     this.setNextStatement(true, "null");
@@ -32,12 +32,12 @@ Blockly.Blocks['servo_position_number'] = {
     this.setHelpUrl('http://www.example.com/');
     this.setColour(0);
     this.appendDummyInput()
-        .appendField("Drehe Servo auf");
+        .appendField(MSG['rotateServoLeft']);
     this.appendValueInput("angle")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT);
     this.appendDummyInput()
-        .appendField("grad");
+        .appendField(MSG['rotateServoRight']);
     this.setInputsInline(true);
     this.setPreviousStatement(true, "null");
     this.setNextStatement(true, "null");
@@ -50,11 +50,10 @@ Blockly.Blocks['print'] = {
     this.setHelpUrl('http://www.example.com/');
     this.setColour(0);
     this.appendValueInput("output_value")
-        .setCheck("null")
         .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("Gebe");
+        .appendField(MSG['outputLeft']);
     this.appendDummyInput()
-        .appendField("aus");
+        .appendField(MSG['outputRight']);
     this.setInputsInline(true);
     this.setPreviousStatement(true, "null");
     this.setNextStatement(true, "null");

@@ -1,3 +1,6 @@
+
+// copied all from 
+// https://blockly-demo.appspot.com/static/demos/interpreter/index.html 
 var myInterpreter = null;
 
 var highlightPause = false;

@@ -30,5 +30,11 @@ var MSG = {
   saveTooltip: "Das Programm auf dem Computer speichern.",
   loadTooltip: "Ein Programm vom Computer laden.",
   filename: "roboter.xml", 
-  saveFileAs: "Wie soll die Datei heißen?"
+  saveFileAs: "Wie soll die Datei heißen?",
+  outputLeft: "Gib",
+  outputRight: "aus",
+  rotateServoToDegreesLeft: "Drehe den Servo auf",
+  rotateServoToDegreesRight: "",
+  rotateServoLeft: "Drehe den Servo auf",
+  rotateServoRight: "grad"
 };
