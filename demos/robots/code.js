@@ -595,7 +595,7 @@ function load_from_parameters() {
     Code.loadBlocks(parameters.loadCode)
   }
   if (parameters.overview != null) {
-    document.getElementById(robotOverview).href = parameters.overview;
+    document.getElementById('robotOverview').href = parameters.overview;
   }
 }
 
