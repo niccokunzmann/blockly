@@ -161,6 +161,7 @@ Code.changeLanguage = function() {
     var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
     var text = Blockly.Xml.domToText(xml);
     window.sessionStorage.loadOnceBlocks = text;
+    window.sessionStorage.doNotLoadBlocksFomLink = true;
   }
 
   var languageMenu = document.getElementById('languageMenu');
@@ -592,7 +593,7 @@ function save_as_link() {
 
 function load_from_parameters() {
   var parameters = getQueryParams(document.location.search);
-  if (parameters.loadCode != null) {
+  if ((parameters.loadCode != null) && (!window.sessionStorage.doNotLoadBlocksFomLink)) {
     Code.loadBlocks(parameters.loadCode)
   }
   if (parameters.overview != null) {
