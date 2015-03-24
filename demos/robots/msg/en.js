@@ -37,5 +37,5 @@ var MSG = {
   rotateServoToDegreesRight: "",
   rotateServoLeft: "rotate servo to position",
   rotateServoRight: "degrees",
-  linkTooltipLink: "Open link to saved document."
+  linkTooltipLink: "Save the program in a link."
 };
