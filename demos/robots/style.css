@@ -170,8 +170,7 @@ button {
 }
 
 .tabHidden {
-  visibility: hidden;
-  border: 0;
+  display: none;
 }
 
 #content_output_frame {
