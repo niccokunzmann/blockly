@@ -161,7 +161,7 @@ Code.changeLanguage = function() {
     var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
     var text = Blockly.Xml.domToText(xml);
     window.sessionStorage.loadOnceBlocks = text;
-    window.sessionStorage.doNotLoadBlocksFomLink = true;
+    window.sessionStorage.doNotLoadBlocksFromLink = true;
   }
 
   var languageMenu = document.getElementById('languageMenu');
@@ -587,15 +587,19 @@ function save_as_link() {
   parameters.loadCode = xmlText;
   // open window 
   //   http://stackoverflow.com/a/11384018
-  var url = document.location.origin + document.location.pathname + '?' + serialize(parameters);
+  var url = document.location + '?' + serialize(parameters);
   var win = window.open(url, '_blank');
 }
 
 function load_from_parameters() {
   var parameters = getQueryParams(document.location.search);
-  if ((parameters.loadCode != null) && (!window.sessionStorage.doNotLoadBlocksFomLink)) {
-    Code.loadBlocks(parameters.loadCode)
+  alert(window.sessionStorage.doNotLoadBlocksFromLink);
+  if (!window.sessionStorage.doNotLoadBlocksFromLink) {
+    if (parameters.loadCode != null) {
+      Code.loadBlocks(parameters.loadCode)
+    }
   }
+  delete window.sessionStorage.doNotLoadBlocksFromLink;
   if (parameters.overview != null) {
     document.getElementById('robotOverview').href = parameters.overview;
   }
