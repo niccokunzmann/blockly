@@ -593,7 +593,6 @@ function save_as_link() {
 
 function load_from_parameters() {
   var parameters = getQueryParams(document.location.search);
-  alert(window.sessionStorage.doNotLoadBlocksFromLink);
   if (!window.sessionStorage.doNotLoadBlocksFromLink) {
     if (parameters.loadCode != null) {
       Code.loadBlocks(parameters.loadCode)
