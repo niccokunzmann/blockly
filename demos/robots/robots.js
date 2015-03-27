@@ -199,8 +199,6 @@ function execute_python_code() {
   call_server(path);
 }
 
-var counter
-
 function update_output() {
   if (current_language == EXECUTING_LANGUAGE_PYTHON) {
     var output_frame = document.getElementById('content_output_frame');
@@ -208,9 +206,22 @@ function update_output() {
   }
 }
 
+String.prototype.HTMLescape = function() {
+  // from
+  //   http://stackoverflow.com/a/5499821/1320237
+  var tagsToReplace = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;'
+  };
+  return this.replace(/[&<>]/g, function(tag) {
+    return tagsToReplace[tag] || tag;
+  });
+};
+
 function append_output(output) {
   var output_element = document.getElementById('content_output');
-  output_element.innerText += output + "\n";
+  output_element.innerHTML += output.HTMLescape() + "\n";
 }
 
 function stop_execution() {
