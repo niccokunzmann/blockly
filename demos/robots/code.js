@@ -78,6 +78,7 @@ Code.LANGUAGE_NAME = {
 Code.LANGUAGE_NAME = {
   'de': 'Deutsch',
   'en': 'English',
+  'ru': 'Русский'
 };
 
 /**
