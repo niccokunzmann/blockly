@@ -49,10 +49,7 @@ function compute_progress() {
     var item = items_to_load[i];
     sum += item.weight;
     if (item.is_loaded()) {
-      alert('ok:' + item.name);
       progress += item.weight;
-    } else {
-      alert('fail:' + item.name);
     }
   }
   return progress / sum;
@@ -65,8 +62,12 @@ function check_loading() {
 
 var progress_bar = undefined;
 var progress_div = undefined;
+var do_not_open_progress_bar_again = false;
 
 function add_progress_bar() {
+  if (do_not_open_progress_bar_again) {
+    return;
+  }
   progress_bar = document.createElement('div');
   progress_bar.style.width = '100%';
   progress_bar.style.height = '10px';
@@ -106,9 +107,20 @@ function close_progress_bar() {
     document.body.removeChild(progress_bar);
     progress_bar = null;
   }
+  do_not_open_progress_bar_again = true;
+}
+
+function wait_for_body() {
+  if (document.body) {
+    open_progress_bar();
+  } else {
+    setTimeout(wait_for_body, 100);
+  }
 }
 
 // http://stackoverflow.com/questions/9916747/why-is-document-body-null-in-my-javascript
-window.onload = open_progress_bar;
+// does not work
+// window.onload = open_progress_bar;
+wait_for_body();
 
 window.addEventListener('load', close_progress_bar);
