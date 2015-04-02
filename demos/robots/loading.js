@@ -1,6 +1,7 @@
 
 function javascript_function_loaded(name, weight) {
   var loaded = {};
+  loaded.name = name;
   loaded.names = name.split('.');
   loaded.is_loaded = function() { 
     var root = window;
@@ -15,7 +16,7 @@ function javascript_function_loaded(name, weight) {
   if (weight == undefined) {
     loaded.weight = 1;
   } else {
-    loaded.weigth = weight;
+    loaded.weight = weight;
   }
   return loaded;
 };
@@ -27,41 +28,45 @@ var items_to_load = [
   javascript_function_loaded('Interpreter'),
   javascript_function_loaded('Blob'),
   javascript_function_loaded('saveAs'),
-  javascript_function_loaded('Blockly.XML', 5),
+  javascript_function_loaded('Blockly.Xml', 5),
   javascript_function_loaded('Blockly.Blocks'),
   javascript_function_loaded('Blockly.JavaScript'),
   javascript_function_loaded('Blockly.Python')
   ];
   
 function check_loading_loop() {
-  if (progress_bar_closed) {
+  if (!there_is_a_progress_bar()) {
     return;
   }
-  setTimeout(check_loading, 1000);
-  
+  setTimeout(check_loading_loop, 1000);
+  check_loading();
 }
 
-function check_loading() {
-  var sum = 0;
-  var progress = 0;
+function compute_progress() {
+  var sum = 1;
+  var progress = 1;
   for (var i = 0; i < items_to_load.length; i++) {
     var item = items_to_load[i];
     sum += item.weight;
     if (item.is_loaded()) {
+      alert('ok:' + item.name);
       progress += item.weight;
+    } else {
+      alert('fail:' + item.name);
     }
   }
-  set_progress_bar(progress / sum);
+  return progress / sum;
 }
 
-check_loading_loop();
+function check_loading() {
+  var progress = compute_progress();
+  set_progress_bar(progress);
+}
 
 var progress_bar = undefined;
+var progress_div = undefined;
 
-function open_progress_bar() {
-  if (progress_bar != undefined) {
-    close_progress_bar();
-  }
+function add_progress_bar() {
   progress_bar = document.createElement('div');
   progress_bar.style.width = '100%';
   progress_bar.style.height = '10px';
@@ -70,23 +75,40 @@ function open_progress_bar() {
   progress_bar.style.border = '1px';
   progress_bar.style["background-color"] = "red";
   progress_bar.style.borderColor = 'black';
-  progress_bar.progress_div = document.createElement('div');
-  progress_bar.progress_div.style.width = '0%';
-  progress_bar.progress_div.style.height = '100%';
-  progress_bar.progress_div.style["background-color"] = 'green';
-  progress_bar.appendChild(progress_bar.progress_div);
+  progress_div = document.createElement('div');
+  progress_div.style.width = '0%';
+  progress_div.style.height = '100%';
+  progress_div.style["background-color"] = 'green';
+  progress_bar.appendChild(progress_div);
   document.body.appendChild(progress_bar);
 }
 
+function open_progress_bar() {
+  if (!there_is_a_progress_bar()) {
+    add_progress_bar();
+  }
+  check_loading_loop();
+}
+
+function there_is_a_progress_bar() {
+  return progress_bar != undefined;
+}
+
 function set_progress_bar(value) {
-  if (progress_bar == undefined) {
+  if (!there_is_a_progress_bar()) {
     open_progress_bar();
   }
-  progress_bar.progress_div.style.width = Math.round(value * 100) + "%";
+  progress_div.style.width = Math.round(value * 100) + "%";
 }
 
 function close_progress_bar() {
-  progress_bar_closed = true;
+  if (there_is_a_progress_bar()) {
+    document.body.removeChild(progress_bar);
+    progress_bar = null;
+  }
 }
-  
+
+// http://stackoverflow.com/questions/9916747/why-is-document-body-null-in-my-javascript
+window.onload = open_progress_bar;
+
 window.addEventListener('load', close_progress_bar);
