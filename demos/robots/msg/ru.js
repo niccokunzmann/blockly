@@ -37,5 +37,15 @@ var MSG = {
   rotateServoToDegreesRight: "",
   rotateServoLeft: "Вращай серво на",
   rotateServoRight: "градусов",
-  linkTooltipLink: "Сохранить программу в ссылке."
+  linkTooltipLink: "Сохранить программу в ссылке.",
+  
+  setRobotVelocityLeft : "Движай серво",
+  setRobotVelocityRight : "",
+  robotVelocityVeryFast : "очень быстро",
+  robotVelocityFast : "быстро",
+  robotVelocityMediumFast : "средно-быстро",
+  robotVelocityMiddle : "нормално",
+  robotVelocityMediumSlow : "средно-медленно",
+  robotVelocitySlow : "медленно",
+  robotVelocityVerySlow : "очень медленно"
 };

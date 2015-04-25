@@ -305,6 +305,11 @@
     <category id="catVariables" custom="VARIABLE"></category>
     <category id="catFunctions" custom="PROCEDURE"></category>
     <category id="catRobots">
+      <block type="print">
+        <value name="output_value">
+          <block type="text"></block>
+        </value>
+      </block>
       <block type="servo_position"></block>
       <block type="servo_position_number">
         <value name="angle">
@@ -313,11 +318,7 @@
           </block>
         </value>
       </block>
-      <block type="print">
-        <value name="output_value">
-          <block type="text"></block>
-        </value>
-      </block>
+      <block type="servo_velocity"></block>
     </category>
   </xml>
 

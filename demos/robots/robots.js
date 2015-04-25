@@ -45,6 +45,28 @@ Blockly.Blocks['servo_position_number'] = {
   }
 };
 
+Blockly.Blocks['servo_velocity'] = {
+  init: function() {
+    this.setHelpUrl('http://www.example.com/');
+    this.setColour(0);
+    this.appendDummyInput()
+        .appendField(MSG["setRobotVelocityLeft"])
+        .appendField(new Blockly.FieldDropdown([
+          [MSG["robotVelocityVeryFast"], "1"], 
+          [MSG["robotVelocityFast"], "2"], 
+          [MSG["robotVelocityMediumFast"], "3"], 
+          [MSG["robotVelocityMiddle"], "4"], 
+          [MSG["robotVelocityMediumSlow"], "5"], 
+          [MSG["robotVelocitySlow"], "6"], 
+          [MSG["robotVelocityVerySlow"], "7"]]), "velocity")
+        .appendField(MSG["setRobotVelocityRight"]);
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, "null");
+    this.setNextStatement(true, "null");
+    this.setTooltip('');
+  }
+};
+
 Blockly.Blocks['print'] = {
   init: function() {
     this.setHelpUrl('http://www.example.com/');
@@ -79,6 +101,12 @@ Blockly.JavaScript['servo_position_number'] = function(block) {
   return code;
 };
 
+Blockly.JavaScript['servo_velocity'] = function(block) {
+  var servo_velocity = block.getFieldValue('velocity');
+  var code = 'set_servo_velocity(' + servo_velocity + ');\n';
+  return code;
+};
+
 Blockly.JavaScript['print'] = function(block) {
   var value_name = Blockly.JavaScript.valueToCode(block, 'output_value', Blockly.JavaScript.ORDER_ATOMIC);
   var code = 'append_output(' + value_name + ');\n';
@@ -95,6 +123,13 @@ function initInterpreterApi(interpreter, scope) {
     return interpreter.createPrimitive(set_servo_position(angle));
   };
   interpreter.setProperty(scope, 'set_servo_position',
+      interpreter.createNativeFunction(wrapper));
+
+  // Add an API function for the set_servo_velocity .
+  var wrapper = function(velocity) {
+    return interpreter.createPrimitive(set_servo_velocity(velocity));
+  };
+  interpreter.setProperty(scope, 'set_servo_velocity',
       interpreter.createNativeFunction(wrapper));
 
   // Add an API function for the append_output() block.
@@ -130,6 +165,12 @@ Blockly.Python['servo_position_number'] = function(block) {
   return code;
 };
 
+Blockly.Python['servo_velocity'] = function(block) {
+  var servo_velocity = block.getFieldValue('velocity');
+  var code = 'set_servo_velocity(' + servo_velocity + ')\n';
+  return code;
+};
+
 Blockly.Python['print'] = function(block) {
   var value_name = Blockly.Python.valueToCode(block, 'output_value', Blockly.Python.ORDER_ATOMIC);
   var code = 'print(' + value_name + ')\n';
@@ -140,10 +181,15 @@ Blockly.Python['print'] = function(block) {
  *              move the robot
  */
 
-
 function set_servo_position(degrees) {
   var position = Math.round(degrees);
   var path = '/servo_position/' + position;
+  call_server(path);
+}
+
+function set_servo_velocity(velocity) {
+  var position = Math.round(velocity);
+  var path = '/servo_velocity/' + velocity;
   call_server(path);
 }
 

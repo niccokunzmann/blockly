@@ -37,5 +37,16 @@ var MSG = {
   rotateServoToDegreesRight: "",
   rotateServoLeft: "rotate servo to position",
   rotateServoRight: "degrees",
-  linkTooltipLink: "Save the program in a link."
+  linkTooltipLink: "Save the program in a link.",
+  
+  setRobotVelocityLeft : "Move robot",
+  setRobotVelocityRight : "",
+  robotVelocityVeryFast : "very fast",
+  robotVelocityFast : "fast",
+  robotVelocityMediumFast : "medium fast",
+  robotVelocityMiddle : "middle",
+  robotVelocityMediumSlow : "medium slow",
+  robotVelocitySlow : "slow",
+  robotVelocityVerySlow : "very slow"
+
 };
